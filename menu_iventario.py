@@ -49,13 +49,26 @@ def menu(nome):
                 item = int(input("Qual o indice do item?: "))
 
                 bancos.equipa_item(nome,bag[item][1],dic_lote[lote])
+                print(f'nome {nome}, bag {bag[item][1]}, dic {dic_lote[lote]}')
 
         elif opcao == 3:
-            print(f'Corpo: {bancos.exibe_equipados(nome)[0][1]}')
-            print(f'Mão Arma: {bancos.exibe_equipados(nome)[0][2]}')
-            print(f'Mão Anel: {bancos.exibe_equipados(nome)[0][3]}')
-            print(f'PÉS: {bancos.exibe_equipados(nome)[0][4]}')
-
+            try:
+                print(f'Corpo: {bancos.exibe_equipados(nome)[0][3]}')
+            except Exception as err:
+                print(f'Corpo:')
+            try:
+                print(f'Mão Arma: {bancos.exibe_equipados(nome)[0][1]}')
+            except Exception as err:
+                print(f'Mão Arma:')
+            try:
+                print(f'Mão Anel: {bancos.exibe_equipados(nome)[0][2]}')
+            except Exception as err:
+                print(f'Mão Anel:')                
+            try:
+                print(f'PÉS: {bancos.exibe_equipados(nome)[0][4]}')
+            except Exception as err:
+                print(f'PÉS:')
+                
         elif opcao == 4:    
             print("_"*25)
             equipar = input("Digite o indice dos itens que deseja deletar: ")

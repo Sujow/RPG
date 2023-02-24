@@ -41,14 +41,25 @@ def tabela_iventario(nome):
 
 
 def tab_itens_equipados(nome):
-    
-    cursor.execute(f"""
-    CREATE TABLE IF NOT EXISTS {nome}_equipado (
-    id INTEGER NOT NULL PRIMARY KEY,
-    mao_arma,
-    mao_anel,
-    corpo,
-    pes);""")
+    try:
+        cursor.execute(f"""
+        CREATE TABLE {nome}_equipado (
+        id INTEGER NOT NULL PRIMARY KEY,
+        mao_arma,
+        mao_anel,
+        corpo,
+        pes);""")
+        
+        # inserindo dados na tabela
+        cursor.execute(f"""
+        INSERT OR REPLACE INTO {nome}_equipado (id,mao_arma,mao_anel,corpo,pes)
+        VALUES (1,'','','','')""")
+
+        # gravando no bd
+        conn.commit() 
+        
+    except:
+        pass
 
 def tabela_arsenal():
     

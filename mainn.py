@@ -1,7 +1,7 @@
 import random
 from time import sleep
 import sqlite3
-import monstro_ogro
+from monstros import monstro_ogro1, monstro_ogro2
 import heroi_mago
 import bancos
 import gerador_item
@@ -22,9 +22,12 @@ def menu():
         batalha()
 
 def batalha():
+    level = 1
 
     meu_char = heroi_mago.mago(nome,tipo)
-    monstro = monstro_ogro.Ogro()
+    char_base = heroi_mago.mago(nome,tipo)
+    
+    monstro = monstro_ogro1.Ogro()
 
     bancos.tab_itens_equipados(nome)
     
@@ -38,31 +41,39 @@ def batalha():
     penetração_M = 0
     critico = 0
 
+    #print(equipados[0])
+    print("\n--------EQUIPADOS------------------")
     if equipados != None or equipados != "None":
-        for n,i in enumerate(equipados):
-            nome_item = equipados[n][1]
+        for n,i in enumerate(equipados[0]):
+            nome_item = equipados[0][n]
             print(nome_item)
-            meu_char.atack_fisico += bancos.busca_arma_arsenal(nome_item)[n][2]
-            meu_char.defesa += bancos.busca_arma_arsenal(nome_item)[n][3]
-            meu_char.power += bancos.busca_arma_arsenal(nome_item)[n][4]
-            meu_char.life += bancos.busca_arma_arsenal(nome_item)[n][5]
-            print(meu_char.life, bancos.busca_arma_arsenal(nome_item)[n][5])
+            if nome_item != 1:
+                try:
+                    meu_char.atack_fisico += bancos.busca_arma_arsenal(nome_item)[0][2]
+                    meu_char.defesa += bancos.busca_arma_arsenal(nome_item)[0][3]
+                    meu_char.power += bancos.busca_arma_arsenal(nome_item)[0][4]
+                    meu_char.life += bancos.busca_arma_arsenal(nome_item)[0][5]
+                    vida_restaurada = meu_char.life
+                    meu_char.mana += bancos.busca_arma_arsenal(nome_item)[0][6]
+                    mana_restaurada = meu_char.mana
+                    meu_char.penetração_magica += bancos.busca_arma_arsenal(nome_item)[0][7]
+                    meu_char.critico += bancos.busca_arma_arsenal(nome_item)[0][8]
+                except:
+                    pass
 
-            meu_char.mana += bancos.busca_arma_arsenal(nome_item)[n][6]
-            meu_char.penetração_magica += bancos.busca_arma_arsenal(nome_item)[n][7]
-            meu_char.critico += bancos.busca_arma_arsenal(nome_item)[n][8]   
-
-    print("========== Status do Heroi ============")
-    print("ATKK: ", meu_char.atack_fisico)
-    print("DEFE: ", meu_char.defesa)
-    print("LIFE: ", meu_char.life)
-    print("POWE: ", meu_char.power)
-    print("MANA: ", meu_char.mana)    
-    print("PMAG: ", meu_char.penetração_magica)
-    print("CRIT: ", meu_char.critico)
+    print("\n========== Status do Heroi ============")
+    print(f"ATKK: {char_base.atack_fisico} => {meu_char.atack_fisico}")
+    print(f"DEFE: {char_base.defesa} => {meu_char.defesa}")
+    print(f"LIFE: {char_base.life} => {meu_char.life}")
+    print(f"POWE: {char_base.power} => {meu_char.power}")
+    print(f"MANA: {char_base.mana} => {meu_char.mana}") 
+    print(f"PMAG: {char_base.penetração_magica} => {meu_char.penetração_magica}")
+    print(f"CRIT: {char_base.critico} => {meu_char.critico}")
 
     continua_gam = "n"
     print("\nA BATALHA COMEÇA")
+    print(monstro.name)
+    print("==============================")
 
     vida_heroi = meu_char.life
     presentação_vida_heroi = "-" * vida_heroi
@@ -79,17 +90,21 @@ def batalha():
     while True:
 
         if continua_gam == "s":
-            meu_char = heroi_mago.mago(nome,tipo)
-            monstro = monstro_ogro.Ogro()
+            if level == 2:
+                monstro = monstro_ogro2.Ogro()
+            if level == 3:
+                monstro = monstro_ogro3.Ogro()
             
             vida_heroi = meu_char.life
-            presentação_vida_heroi = "||" * vida_heroi
+            meu_char.mana = mana_restaurada
+            presentação_vida_heroi = "-" * vida_heroi
             
             vida_monstro = monstro.life
             defesa_monstro = monstro.defesa
             resistencia_magc = monstro.resistencia_magica
-            presentação_vida_monstro = "||" * vida_monstro
+            presentação_vida_monstro = "-" * vida_monstro
             continua_gam = "n"
+            print(monstro.name)
         
         print("_"*25)
         print(f'\nMana do Heroi = {meu_char.mana}')
@@ -112,6 +127,7 @@ def batalha():
                 cont_stun = 1
                     
             if retorno[2] == "sim":#penetrou critico
+                print("<==== CRITICO ====>")
                 vida_monstro -= dano_da_porrada
 
             if retorno[2] == "não":#NÃO penetrou
@@ -120,7 +136,8 @@ def batalha():
                 else:
                     print("O OGRO DEFENDEU!!!")
 
-            print("||"*vida_monstro)
+            print("Vido o Monstro: ", vida_monstro)
+            print("-"*vida_monstro)
             meu_char.mana = retorno[1]
                             
         if ação == "2":
@@ -130,6 +147,7 @@ def batalha():
             break
 
         if vida_monstro < 0:
+            level += 1
             sleep(1)
             print("Você eliminou o Ogro das montanhas")
             sleep(2)
@@ -163,6 +181,7 @@ def batalha():
             continuar = input("\ndeseja continuar ? Digite [S/N]: ")
             if continuar.upper() == "S":
                 continua_gam = "s"
+                continue
             else:
                 print("Finalizando...")
                 sleep(15)
@@ -189,8 +208,12 @@ def batalha():
                 if opcao_monstro != 5:
                     opcao = monstro.atack()
                     print("_"*25)
-                    vida_heroi -= opcao
-                    presentação_vida_heroi = "||" * vida_heroi
+                    if opcao[1] == "sim":#penetrou critico
+                        vida_heroi -= opcao[0]
+                    if opcao[1] == "não":#penetrou critico
+                        vida_heroi = vida_heroi + meu_char.defesa - opcao[0]
+                        
+                    presentação_vida_heroi = "-" * vida_heroi
                     sleep(1)
                     print(f"Vida Heroi: {presentação_vida_heroi}| {vida_heroi}")
                     print("_"*25)
@@ -198,6 +221,7 @@ def batalha():
                 if vida_heroi < 0:
                     sleep(1)
                     print("O Ogro te desimou..")
+                    level = 0
                     continuar = input("deseja continuar ? Digite [S/N]: ")
                     if continuar.upper() == "S":
                         continua_gam = "s"
@@ -215,12 +239,13 @@ def batalha():
                 if vida_heroi < 0:
                     sleep(1)
                     print("O Ogro te desimou..")
+                    level = 0
                     continuar = input("deseja continuar ? Digite [S/N]: ")
                     if continuar.upper() == "S":
                         continua_gam = "s"
                     else:
                         print("Finalizando...")
-                        sleep(15)
+                        sleep(5)
                         break
                 else:
                     sleep(1)

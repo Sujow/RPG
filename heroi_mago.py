@@ -73,10 +73,12 @@ class mago:
                     penetração_mag = 1 #penetrou 100% critico magico
                     mana_regen += 15
                     mana_nova += mana_regen
+                    penetrou = "sim"
                 else:
                     penetração_mag = 0 #sem penetração
                     mana_nova += mana_regen
-                
+                    penetrou = "não"
+                    
                 print("RAIO!!!")
                 sleep(1)
                 print(f"DANO = {dano_magico}, Mana restante = {mana_gasta}")
@@ -105,9 +107,11 @@ class mago:
                     penetração_mag = 1 #penetrou 100% critico magico
                     mana_regen += 15
                     mana_nova += mana_regen
+                    penetrou = "sim"
                 else:
                     penetração_mag = 0 #sem penetração
                     mana_nova += mana_regen
+                    penetrou = "não"
                   
                 print("OLHA A PEDRA!!!")
                 sleep(1)
@@ -154,10 +158,11 @@ class mago:
             if pen_m <= penetração_magica:
                 penetração_mag = 1 #penetrou 100% critico magico
                 mana_regen += 15
-                mana += mana_regen
+                penetrou = "sim"
             else:
                 penetração_mag = 0 #sem penetração
-                mana += mana_regen
+                mana_nova += mana_regen
+                penetrou = "não"
 
             print(f"AAAAAAAAAAHHHHH")
             sleep(1)
